@@ -5,6 +5,7 @@ module Types
       field :content, String, null: true
       field :community, Types::CommunityType, null: false
       field :comments, [Types::CommentType], null: true
+      # field :user_id, Integer, null: true
     end
   end
   

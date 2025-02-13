@@ -6,6 +6,9 @@ module Mutations
     field :comment, Types::CommentType, null: false
 
     def resolve(content:, discussion_id:)
+      user = context[:current_user]
+      raise GraphQL::ExecutionError, "Authentication required" unless user
+
       discussion = Discussion.find(discussion_id)
       comment = discussion.comments.create!(content: content)
       { comment: comment }
