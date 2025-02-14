@@ -42,15 +42,20 @@ module Types
     # Fetch a single discussion by ID
     field :discussion, Types::DiscussionType, null: false do
       argument :id, ID, required: true
+      argument :limit, Integer, required: false, default_value: 10
+      argument :offset, Integer, required: false, default_value: 0
     end
 
     # Fetch comments for a discussion
     field :comments, [Types::CommentType], null: false do
       argument :discussion_id, ID, required: true
+      argument :limit, Integer, required: false, default_value: 10
+      argument :offset, Integer, required: false, default_value: 0
     end
 
     def comments(discussion_id:)
       Discussion.find(discussion_id).comments
+      Comment.where(discussion_id: discussion_id).order(created_at: :desc).limit(limit).offset(offset)
     rescue ActiveRecord::RecordNotFound
       GraphQL::ExecutionError.new("Discussion not found")
     end
@@ -66,7 +71,7 @@ module Types
     end
 
     def discussions
-      Discussion.all
+      Discussion.order(created_at: :desc).limit(limit).offset(offset)
     end
 
     def discussion(id:)
@@ -77,6 +82,24 @@ module Types
 
     def users
       User.all
+    end
+
+    field :filtered_discussions, [Types::DiscussionType], null: false do
+      argument :community_id, ID, required: false
+      argument :sort_by, String, required: false, default_value: "latest"
+    end
+
+    def filtered_discussions(community_id: nil, sort_by: "latest")
+      query = community_id ? Discussion.where(community_id: community_id) : Discussion.all
+
+      case sort_by
+      when "latest"
+        query.order(created_at: :desc)
+      when "popular"
+        query.left_joins(:comments).group(:id).order("COUNT(comments.id) DESC")
+      else
+        query
+      end
     end
   end
 end

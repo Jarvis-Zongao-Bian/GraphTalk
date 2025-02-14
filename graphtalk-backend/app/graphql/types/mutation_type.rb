@@ -2,6 +2,9 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :delete_discussion, mutation: Mutations::DeleteDiscussion
+    field :update_comment, mutation: Mutations::UpdateComment
+    field :update_discussion, mutation: Mutations::UpdateDiscussion
     field :refresh_token, mutation: Mutations::RefreshToken
     field :delete_comment, mutation: Mutations::DeleteComment
     field :login_user, mutation: Mutations::LoginUser
