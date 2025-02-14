@@ -56,3 +56,9 @@ gem "graphiql-rails", "~> 1.10"
 gem "propshaft", "~> 1.1"
 
 gem "bcrypt", "~> 3.1"
+
+gem "rack-attack", "~> 6.7"
+
+gem "redis", "~> 5.3"
+
+gem "bunny", "~> 2.23"

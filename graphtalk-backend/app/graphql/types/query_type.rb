@@ -56,7 +56,9 @@ module Types
     end
 
     def communities
-      Community.all
+      Rails.cache.fetch("all_communities", expires_in: 10.minutes) do
+        Community.all
+      end
     end
 
     def community(id:)

@@ -11,6 +11,15 @@ module Mutations
 
       discussion = Discussion.find(discussion_id)
       comment = discussion.comments.create!(content: content)
+
+      # Publish notification to RabbitMQ
+      RabbitMQClient.publish({
+                               event: "new_comment",
+                               discussion_id: discussion.id,
+                               user: user.username,
+                               message: content
+                             })
+
       { comment: comment }
     rescue ActiveRecord::RecordNotFound
       GraphQL::ExecutionError.new("Discussion not found")

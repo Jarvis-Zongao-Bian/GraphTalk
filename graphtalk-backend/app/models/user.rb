@@ -8,5 +8,18 @@ class User < ApplicationRecord
     has_many :communities, dependent: :destroy
     has_many :discussions, dependent: :destroy
     has_many :comments, dependent: :destroy
+
+    # Role-based authorization helpers
+    def admin?
+        role == "admin"
+    end
+
+    def moderator?
+        role == "moderator"
+    end
+
+    def user?
+        role == "user"
+    end
   end
   

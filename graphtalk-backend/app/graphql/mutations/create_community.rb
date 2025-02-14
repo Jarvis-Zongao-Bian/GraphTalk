@@ -27,6 +27,10 @@ module Mutations
     field :community, Types::CommunityType, null: false
 
     def resolve(name:, description: nil)
+      user = context[:current_user]
+      raise GraphQL::ExecutionError, "Authentication required" unless user
+      raise GraphQL::ExecutionError, "Admin access required" unless user.admin?
+
       community = Community.create!(name: name, description: description)
       { community: community }
     rescue ActiveRecord::RecordInvalid => e
