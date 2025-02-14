@@ -62,3 +62,8 @@ gem "rack-attack", "~> 6.7"
 gem "redis", "~> 5.3"
 
 gem "bunny", "~> 2.23"
+
+gem "prometheus-client", "~> 4.2"
+
+gem "opentelemetry-sdk", "~> 1.7"
+gem "opentelemetry-exporter-otlp", "~> 0.29.1"
